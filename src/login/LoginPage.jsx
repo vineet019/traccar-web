@@ -27,8 +27,8 @@ import fetchOrThrow from '../common/util/fetchOrThrow';
 const useStyles = makeStyles()((theme) => ({
   options: {
     position: 'fixed',
-    top: theme.spacing(2),
-    right: theme.spacing(2),
+    top: theme.spacing(2.5),
+    right: theme.spacing(2.5),
     display: 'flex',
     flexDirection: 'row',
     gap: theme.spacing(1),
@@ -36,20 +36,25 @@ const useStyles = makeStyles()((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(2.5),
+    maxWidth: 400,
+    margin: '0 auto',
   },
   extraContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: theme.spacing(4),
-    marginTop: theme.spacing(2),
-  },
-  registerButton: {
-    minWidth: 'unset',
+    gap: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   link: {
     cursor: 'pointer',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    color: theme.palette.text.secondary,
+    '&:hover': {
+      color: theme.palette.text.primary,
+    },
   },
 }));
 
@@ -231,6 +236,14 @@ const LoginPage = () => {
               variant="contained"
               color="secondary"
               disabled={!email || !password || (codeEnabled && !code)}
+              sx={{
+                mt: 1,
+                py: 1.5,
+                fontSize: '0.9375rem',
+                fontWeight: 600,
+                textTransform: 'none',
+                borderRadius: 2,
+              }}
             >
               {t('loginLogin')}
             </Button>

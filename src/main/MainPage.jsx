@@ -34,6 +34,8 @@ const useStyles = makeStyles()((theme) => ({
       height: '100%',
       width: theme.dimensions.drawerWidthDesktop,
       zIndex: 3,
+      background: theme.palette.background.paper,
+      borderRight: `1px solid ${theme.palette.divider}`,
     },
     [theme.breakpoints.down('md')]: {
       height: '100%',
@@ -43,7 +45,7 @@ const useStyles = makeStyles()((theme) => ({
   header: {
     pointerEvents: 'auto',
     zIndex: 6,
-    borderRadius: 0,
+    padding: theme.spacing(2),
     background: theme.palette.background.paper,
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
@@ -51,12 +53,11 @@ const useStyles = makeStyles()((theme) => ({
     pointerEvents: 'auto',
     padding: theme.spacing(2),
     background: theme.palette.background.paper,
-    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   footer: {
     pointerEvents: 'auto',
     zIndex: 5,
-    borderRadius: 0,
+    padding: theme.spacing(1.5, 2),
     background: theme.palette.background.paper,
     borderTop: `1px solid ${theme.palette.divider}`,
   },
@@ -76,7 +77,6 @@ const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     minHeight: 0,
     background: theme.palette.background.paper,
-    borderRadius: 0,
   },
   mapContainer: {
     position: 'relative',
@@ -127,7 +127,7 @@ const MainPage = () => {
   return (
     <div className={classes.root}>
       <div className={classes.sidebar}>
-        <Paper square elevation={0} className={classes.header}>
+        <Box className={classes.header}>
           <MainToolbar
             filteredDevices={filteredDevices}
             devicesOpen={devicesOpen}
@@ -141,7 +141,7 @@ const MainPage = () => {
             filterMap={filterMap}
             setFilterMap={setFilterMap}
           />
-        </Paper>
+        </Box>
         <Box className={classes.statsContainer}>
           <DashboardStats />
         </Box>
@@ -155,14 +155,14 @@ const MainPage = () => {
               />
             </div>
           )}
-          <Paper square elevation={0} className={classes.contentList} style={devicesOpen ? {} : { visibility: 'hidden' }}>
+          <Box className={classes.contentList} style={devicesOpen ? {} : { visibility: 'hidden' }}>
             <DeviceList devices={filteredDevices} />
-          </Paper>
+          </Box>
         </div>
         {desktop && (
-          <Paper square elevation={0} className={classes.footer}>
+          <Box className={classes.footer}>
             <BottomMenu />
-          </Paper>
+          </Box>
         )}
       </div>
       {desktop && (

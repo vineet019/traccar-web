@@ -42,9 +42,12 @@ const useStyles = makeStyles()((theme, { desktopPadding }) => ({
   card: {
     pointerEvents: 'auto',
     width: theme.dimensions.popupMaxWidth,
-    borderRadius: theme.shape.borderRadius * 2,
+    borderRadius: 16,
     overflow: 'hidden',
-    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    background: alpha(theme.palette.background.paper, 0.95),
+    backdropFilter: 'blur(20px)',
+    border: `1px solid ${theme.palette.divider}`,
+    boxShadow: `0 12px 24px ${alpha(theme.palette.common.black, 0.12)}`,
   },
   media: {
     height: theme.dimensions.popupImageHeight,
@@ -60,8 +63,8 @@ const useStyles = makeStyles()((theme, { desktopPadding }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(2, 2, 1, 2.5),
-    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`,
+    padding: theme.spacing(2, 2.5),
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   content: {
     paddingTop: theme.spacing(2),

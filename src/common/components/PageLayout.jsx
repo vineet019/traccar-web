@@ -22,12 +22,15 @@ const useStyles = makeStyles()((theme, { miniVariant }) => ({
   root: {
     height: '100%',
     display: 'flex',
+    background: theme.palette.background.default,
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
     },
   },
   desktopDrawer: {
     width: miniVariant ? `calc(${theme.spacing(8)} + 1px)` : theme.dimensions.drawerWidthDesktop,
+    borderRight: `1px solid ${theme.palette.divider}`,
+    background: theme.palette.background.paper,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -44,6 +47,8 @@ const useStyles = makeStyles()((theme, { miniVariant }) => ({
   },
   mobileToolbar: {
     zIndex: 1,
+    background: theme.palette.background.paper,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     '@media print': {
       display: 'none',
     },
@@ -54,6 +59,7 @@ const useStyles = makeStyles()((theme, { miniVariant }) => ({
     display: 'flex',
     flexDirection: 'column',
     overflowY: 'auto',
+    padding: theme.spacing(3),
   },
 }));
 
@@ -65,7 +71,7 @@ const PageTitle = ({ breadcrumbs }) => {
 
   if (desktop) {
     return (
-      <Typography variant="h6" noWrap>{t(breadcrumbs[0])}</Typography>
+      <Typography variant="h6" fontWeight={600} noWrap>{t(breadcrumbs[0])}</Typography>
     );
   }
   return (
