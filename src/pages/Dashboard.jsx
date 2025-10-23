@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Box,
@@ -20,7 +20,6 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import MainMap from '../main/MainMap';
 import DeviceList from '../main/DeviceList';
-import useFilter from '../main/useFilter';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -169,10 +168,8 @@ const Dashboard = () => {
   const devices = useSelector((state) => state.devices.items);
   const positions = useSelector((state) => state.session.positions);
 
-  const [filteredDevices, setFilteredDevices] = useState([]);
-  const [filteredPositions, setFilteredPositions] = useState([]);
-
-  useFilter('', { statuses: [], groups: [] }, '', false, positions, setFilteredDevices, setFilteredPositions);
+  const filteredDevices = useMemo(() => Object.values(devices), [devices]);
+  const filteredPositions = useMemo(() => Object.values(positions), [positions]);
 
   const stats = useMemo(() => {
     const deviceArray = Object.values(devices);

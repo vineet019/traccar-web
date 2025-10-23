@@ -39,12 +39,15 @@ const DeviceList = ({ devices }) => {
   return (
     <List
       className={classes.list}
-      rowComponent={DeviceRow}
-      rowCount={devices.length}
-      rowHeight={72}
-      rowProps={{ devices }}
+      height={500}
+      itemCount={devices.length}
+      itemSize={72}
+      width="100%"
       overscanCount={5}
-    />
+      itemData={devices}
+    >
+      {DeviceRow}
+    </List>
   );
 };
 

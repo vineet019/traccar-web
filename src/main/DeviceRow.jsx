@@ -53,7 +53,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-const DeviceRow = ({ devices, index, style }) => {
+const DeviceRow = ({ data, index, style }) => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const t = useTranslation();
@@ -61,11 +61,15 @@ const DeviceRow = ({ devices, index, style }) => {
   const admin = useAdministrator();
   const selectedDeviceId = useSelector((state) => state.devices.selectedId);
 
-  const item = devices[index];
-  const position = useSelector((state) => state.session.positions[item.id]);
+  const item = data[index];
+  const position = useSelector((state) => state.session.positions[item?.id]);
 
   const devicePrimary = useAttributePreference('devicePrimary', 'name');
   const deviceSecondary = useAttributePreference('deviceSecondary', '');
+
+  if (!item) {
+    return null;
+  }
 
   const secondaryText = () => {
     let status;
