@@ -1,7 +1,7 @@
 import {
   useState, useCallback, useEffect,
 } from 'react';
-import { Paper } from '@mui/material';
+import { Paper, Box } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -16,10 +16,12 @@ import useFilter from './useFilter';
 import MainToolbar from './MainToolbar';
 import MainMap from './MainMap';
 import { useAttributePreference } from '../common/util/preferences';
+import DashboardStats from './DashboardStats';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
     height: '100%',
+    backgroundColor: theme.palette.background.default,
   },
   sidebar: {
     pointerEvents: 'none',
@@ -29,9 +31,8 @@ const useStyles = makeStyles()((theme) => ({
       position: 'fixed',
       left: 0,
       top: 0,
-      height: `calc(100% - ${theme.spacing(3)})`,
+      height: '100%',
       width: theme.dimensions.drawerWidthDesktop,
-      margin: theme.spacing(1.5),
       zIndex: 3,
     },
     [theme.breakpoints.down('md')]: {
@@ -42,10 +43,22 @@ const useStyles = makeStyles()((theme) => ({
   header: {
     pointerEvents: 'auto',
     zIndex: 6,
+    borderRadius: 0,
+    background: theme.palette.background.paper,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  statsContainer: {
+    pointerEvents: 'auto',
+    padding: theme.spacing(2),
+    background: theme.palette.background.paper,
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   footer: {
     pointerEvents: 'auto',
     zIndex: 5,
+    borderRadius: 0,
+    background: theme.palette.background.paper,
+    borderTop: `1px solid ${theme.palette.divider}`,
   },
   middle: {
     flex: 1,
@@ -62,6 +75,15 @@ const useStyles = makeStyles()((theme) => ({
     zIndex: 4,
     display: 'flex',
     minHeight: 0,
+    background: theme.palette.background.paper,
+    borderRadius: 0,
+  },
+  mapContainer: {
+    position: 'relative',
+    height: '100%',
+    [theme.breakpoints.up('md')]: {
+      marginLeft: theme.dimensions.drawerWidthDesktop,
+    },
   },
 }));
 
@@ -104,15 +126,8 @@ const MainPage = () => {
 
   return (
     <div className={classes.root}>
-      {desktop && (
-        <MainMap
-          filteredPositions={filteredPositions}
-          selectedPosition={selectedPosition}
-          onEventsClick={onEventsClick}
-        />
-      )}
       <div className={classes.sidebar}>
-        <Paper square elevation={3} className={classes.header}>
+        <Paper square elevation={0} className={classes.header}>
           <MainToolbar
             filteredDevices={filteredDevices}
             devicesOpen={devicesOpen}
@@ -127,6 +142,9 @@ const MainPage = () => {
             setFilterMap={setFilterMap}
           />
         </Paper>
+        <Box className={classes.statsContainer}>
+          <DashboardStats />
+        </Box>
         <div className={classes.middle}>
           {!desktop && (
             <div className={classes.contentMap}>
@@ -137,16 +155,25 @@ const MainPage = () => {
               />
             </div>
           )}
-          <Paper square className={classes.contentList} style={devicesOpen ? {} : { visibility: 'hidden' }}>
+          <Paper square elevation={0} className={classes.contentList} style={devicesOpen ? {} : { visibility: 'hidden' }}>
             <DeviceList devices={filteredDevices} />
           </Paper>
         </div>
         {desktop && (
-          <div className={classes.footer}>
+          <Paper square elevation={0} className={classes.footer}>
             <BottomMenu />
-          </div>
+          </Paper>
         )}
       </div>
+      {desktop && (
+        <div className={classes.mapContainer}>
+          <MainMap
+            filteredPositions={filteredPositions}
+            selectedPosition={selectedPosition}
+            onEventsClick={onEventsClick}
+          />
+        </div>
+      )}
       <EventsDrawer open={eventsOpen} onClose={() => setEventsOpen(false)} />
       {selectedDeviceId && (
         <StatusCard

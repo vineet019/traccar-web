@@ -89,10 +89,29 @@ const DeviceRow = ({ devices, index, style }) => {
         onClick={() => dispatch(devicesActions.selectId(item.id))}
         disabled={!admin && item.disabled}
         selected={selectedDeviceId === item.id}
-        className={selectedDeviceId === item.id ? classes.selected : null}
+        sx={{
+          borderRadius: 1.5,
+          margin: '0 12px 8px',
+          padding: '12px',
+          border: selectedDeviceId === item.id ? '2px solid' : '1px solid',
+          borderColor: selectedDeviceId === item.id ? 'primary.main' : 'divider',
+          backgroundColor: selectedDeviceId === item.id ? 'action.selected' : 'transparent',
+          transition: 'all 0.2s ease-in-out',
+          '&:hover': {
+            backgroundColor: 'action.hover',
+            transform: 'translateX(4px)',
+            borderColor: 'primary.light',
+          },
+        }}
       >
         <ListItemAvatar>
-          <Avatar>
+          <Avatar
+            sx={{
+              bgcolor: selectedDeviceId === item.id ? 'primary.main' : 'action.hover',
+              width: 48,
+              height: 48,
+            }}
+          >
             <img className={classes.icon} src={mapIcons[mapIconKey(item.category)]} alt="" />
           </Avatar>
         </ListItemAvatar>
@@ -104,7 +123,7 @@ const DeviceRow = ({ devices, index, style }) => {
             secondary: Typography,
           }}
           slotProps={{
-            primary: { noWrap: true },
+            primary: { noWrap: true, fontWeight: 600 },
             secondary: { noWrap: true },
           }}
         />

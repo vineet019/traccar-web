@@ -27,6 +27,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PendingIcon from '@mui/icons-material/Pending';
 
+import { alpha } from '@mui/material/styles';
 import { useTranslation } from './LocalizationProvider';
 import RemoveDialog from './RemoveDialog';
 import PositionValue from './PositionValue';
@@ -41,6 +42,9 @@ const useStyles = makeStyles()((theme, { desktopPadding }) => ({
   card: {
     pointerEvents: 'auto',
     width: theme.dimensions.popupMaxWidth,
+    borderRadius: theme.shape.borderRadius * 2,
+    overflow: 'hidden',
+    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
   },
   media: {
     height: theme.dimensions.popupImageHeight,
@@ -56,11 +60,12 @@ const useStyles = makeStyles()((theme, { desktopPadding }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(1, 1, 0, 2),
+    padding: theme.spacing(2, 2, 1, 2.5),
+    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`,
   },
   content: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     maxHeight: theme.dimensions.cardContentMaxHeight,
     overflow: 'auto',
   },
@@ -73,9 +78,12 @@ const useStyles = makeStyles()((theme, { desktopPadding }) => ({
     '& .MuiTableCell-sizeSmall': {
       paddingLeft: 0,
       paddingRight: 0,
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
     },
     '& .MuiTableCell-sizeSmall:first-of-type': {
-      paddingRight: theme.spacing(1),
+      paddingRight: theme.spacing(2),
+      fontWeight: 600,
     },
   },
   cell: {
@@ -83,6 +91,8 @@ const useStyles = makeStyles()((theme, { desktopPadding }) => ({
   },
   actions: {
     justifyContent: 'space-between',
+    padding: theme.spacing(2),
+    background: alpha(theme.palette.action.hover, 0.3),
   },
   root: {
     pointerEvents: 'none',

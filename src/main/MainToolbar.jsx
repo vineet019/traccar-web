@@ -17,7 +17,8 @@ import DeviceRow from './DeviceRow';
 const useStyles = makeStyles()((theme) => ({
   toolbar: {
     display: 'flex',
-    gap: theme.spacing(1),
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(2),
   },
   filterPanel: {
     display: 'flex',
@@ -25,6 +26,10 @@ const useStyles = makeStyles()((theme) => ({
     padding: theme.spacing(2),
     gap: theme.spacing(2),
     width: theme.dimensions.drawerWidthTablet,
+  },
+  searchInput: {
+    borderRadius: theme.shape.borderRadius,
+    transition: 'all 0.2s ease-in-out',
   },
 }));
 
@@ -60,9 +65,20 @@ const MainToolbar = ({
 
   return (
     <Toolbar ref={toolbarRef} className={classes.toolbar}>
-      <IconButton edge="start" onClick={() => setDevicesOpen(!devicesOpen)}>
-        {devicesOpen ? <MapIcon /> : <DnsIcon />}
-      </IconButton>
+      <Tooltip title={devicesOpen ? t('sharedShowMap') : t('sharedShowList')}>
+        <IconButton
+          edge="start"
+          onClick={() => setDevicesOpen(!devicesOpen)}
+          sx={{
+            bgcolor: 'action.hover',
+            '&:hover': {
+              bgcolor: 'action.selected',
+            },
+          }}
+        >
+          {devicesOpen ? <MapIcon /> : <DnsIcon />}
+        </IconButton>
+      </Tooltip>
       <OutlinedInput
         ref={inputRef}
         placeholder={t('sharedSearchDevices')}
@@ -70,10 +86,11 @@ const MainToolbar = ({
         onChange={(e) => setKeyword(e.target.value)}
         onFocus={() => setDevicesAnchorEl(toolbarRef.current)}
         onBlur={() => setDevicesAnchorEl(null)}
+        className={classes.searchInput}
         endAdornment={(
           <InputAdornment position="end">
             <IconButton size="small" edge="end" onClick={() => setFilterAnchorEl(inputRef.current)}>
-              <Badge color="info" variant="dot" invisible={!filter.statuses.length && !filter.groups.length}>
+              <Badge color="primary" variant="dot" invisible={!filter.statuses.length && !filter.groups.length}>
                 <TuneIcon fontSize="small" />
               </Badge>
             </IconButton>
@@ -169,11 +186,25 @@ const MainToolbar = ({
           </FormGroup>
         </div>
       </Popover>
-      <IconButton edge="end" onClick={() => navigate('/settings/device')} disabled={deviceReadonly}>
-        <Tooltip open={!deviceReadonly && Object.keys(devices).length === 0} title={t('deviceRegisterFirst')} arrow>
+      <Tooltip title={t('sharedAdd')}>
+        <IconButton
+          edge="end"
+          onClick={() => navigate('/settings/device')}
+          disabled={deviceReadonly}
+          sx={{
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            '&:hover': {
+              bgcolor: 'primary.dark',
+            },
+            '&.Mui-disabled': {
+              bgcolor: 'action.disabledBackground',
+            },
+          }}
+        >
           <AddIcon />
-        </Tooltip>
-      </IconButton>
+        </IconButton>
+      </Tooltip>
     </Toolbar>
   );
 };
