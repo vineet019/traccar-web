@@ -40,98 +40,59 @@ import { sessionActions } from '../../store';
 import { useTranslation } from './LocalizationProvider';
 import { nativePostMessage } from './NativeInterface';
 
-const drawerWidth = 280;
-const miniDrawerWidth = 80;
+const drawerWidth = 240;
 
 const useStyles = makeStyles()((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    width: miniDrawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
   },
   drawerPaper: {
     width: drawerWidth,
-    background: `linear-gradient(180deg, ${theme.palette.background.paper} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+    background: theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.divider}`,
+    boxShadow: 'none',
   },
   toolbar: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: theme.spacing(2, 2.5),
-    minHeight: 80,
-  },
-  logo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1.5),
+    padding: theme.spacing(2.5, 2),
+    minHeight: 64,
   },
   logoText: {
-    fontWeight: 700,
-    fontSize: '1.5rem',
-    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
-  },
-  userSection: {
-    padding: theme.spacing(2, 2.5),
-    background: alpha(theme.palette.primary.main, 0.05),
-    borderRadius: theme.shape.borderRadius * 2,
-    margin: theme.spacing(0, 1.5, 2),
-    cursor: 'pointer',
-    transition: 'all 0.2s ease-in-out',
-    '&:hover': {
-      background: alpha(theme.palette.primary.main, 0.1),
-      transform: 'translateY(-2px)',
-    },
-  },
-  userInfo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1.5),
+    fontWeight: 600,
+    fontSize: '1.125rem',
+    letterSpacing: '-0.02em',
+    color: theme.palette.text.primary,
   },
   listItem: {
-    margin: theme.spacing(0.5, 1.5),
-    borderRadius: theme.shape.borderRadius,
-    transition: 'all 0.2s ease-in-out',
+    margin: theme.spacing(0.25, 1),
+    borderRadius: 8,
+    padding: theme.spacing(1, 1.5),
+    transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-      background: alpha(theme.palette.primary.main, 0.08),
-      transform: 'translateX(4px)',
+      background: alpha(theme.palette.action.hover, 0.04),
     },
   },
   activeItem: {
-    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)} 0%, ${alpha(theme.palette.secondary.main, 0.15)} 100%)`,
-    color: theme.palette.primary.main,
-    fontWeight: 600,
+    background: theme.palette.action.selected,
+    color: theme.palette.secondary.main,
+    fontWeight: 500,
     '&:hover': {
-      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.2)} 0%, ${alpha(theme.palette.secondary.main, 0.2)} 100%)`,
+      background: theme.palette.action.selected,
     },
   },
   subItem: {
-    paddingLeft: theme.spacing(7),
+    paddingLeft: theme.spacing(5),
+  },
+  icon: {
+    minWidth: 36,
+    color: 'inherit',
   },
   divider: {
-    margin: theme.spacing(2, 0),
+    margin: theme.spacing(1.5, 2),
+    borderColor: theme.palette.divider,
   },
 }));
 
@@ -186,162 +147,132 @@ const AppSidebar = ({ open, onToggle, isMobile }) => {
   const drawerContent = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Box className={classes.toolbar}>
-        <Box className={classes.logo}>
-          <Avatar
-            sx={{
-              bgcolor: 'primary.main',
-              width: 40,
-              height: 40,
-            }}
-          >
-            <MapIcon />
-          </Avatar>
-          {open && (
-            <Typography className={classes.logoText} noWrap>
-              Traccar
-            </Typography>
-          )}
-        </Box>
-        <IconButton onClick={onToggle} size="small">
-          {open ? <ChevronLeftIcon /> : <MenuIcon />}
-        </IconButton>
+        <Typography className={classes.logoText}>
+          Traccar
+        </Typography>
+        {isMobile && (
+          <IconButton onClick={onToggle} size="small" edge="end">
+            <MenuIcon />
+          </IconButton>
+        )}
       </Box>
 
-      <Divider />
+      <Divider className={classes.divider} />
 
-      {open && user && (
-        <Box className={classes.userSection} onClick={() => handleNavigation(`/settings/user/${user.id}`)}>
-          <Box className={classes.userInfo}>
-            <Avatar
-              sx={{
-                bgcolor: 'secondary.main',
-                width: 48,
-                height: 48,
-              }}
-            >
-              <PersonIcon />
-            </Avatar>
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="subtitle1" fontWeight={600} noWrap>
-                {user.name}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" noWrap>
-                {user.email}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      )}
-
-      <List sx={{ flex: 1, overflow: 'auto', py: 2 }}>
+      <List sx={{ flex: 1, overflow: 'auto', py: 0 }}>
         {menuItems.map((item) => (
-          <Tooltip key={item.id} title={!open ? item.label : ''} placement="right">
-            <ListItemButton
-              className={`${classes.listItem} ${isActive(item.path) ? classes.activeItem : ''}`}
-              onClick={() => handleNavigation(item.path)}
-            >
-              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
-                {item.icon}
-              </ListItemIcon>
-              {open && <ListItemText primary={item.label} />}
-            </ListItemButton>
-          </Tooltip>
+          <ListItemButton
+            key={item.id}
+            className={`${classes.listItem} ${isActive(item.path) ? classes.activeItem : ''}`}
+            onClick={() => handleNavigation(item.path)}
+          >
+            <ListItemIcon className={classes.icon}>
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={item.label}
+              primaryTypographyProps={{
+                fontSize: '0.9375rem',
+                fontWeight: isActive(item.path) ? 500 : 400,
+              }}
+            />
+          </ListItemButton>
         ))}
 
         <Divider className={classes.divider} />
 
-        <Tooltip title={!open ? 'Reports' : ''} placement="right">
-          <ListItemButton
-            className={classes.listItem}
-            onClick={() => setReportsOpen(!reportsOpen)}
-          >
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <AssessmentIcon />
-            </ListItemIcon>
-            {open && (
-              <>
-                <ListItemText primary={t('reportTitle') || 'Reports'} />
-                {reportsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-              </>
-            )}
-          </ListItemButton>
-        </Tooltip>
+        <ListItemButton
+          className={classes.listItem}
+          onClick={() => setReportsOpen(!reportsOpen)}
+        >
+          <ListItemIcon className={classes.icon}>
+            <AssessmentIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('reportTitle') || 'Reports'}
+            primaryTypographyProps={{ fontSize: '0.9375rem' }}
+          />
+          {reportsOpen ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+        </ListItemButton>
 
-        {open && (
-          <Collapse in={reportsOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {reportItems.map((item) => (
-                <ListItemButton
-                  key={item.id}
-                  className={`${classes.listItem} ${classes.subItem} ${isActive(item.path) ? classes.activeItem : ''}`}
-                  onClick={() => handleNavigation(item.path)}
-                >
-                  <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.label} />
-                </ListItemButton>
-              ))}
-            </List>
-          </Collapse>
-        )}
+        <Collapse in={reportsOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {reportItems.map((item) => (
+              <ListItemButton
+                key={item.id}
+                className={`${classes.listItem} ${classes.subItem} ${isActive(item.path) ? classes.activeItem : ''}`}
+                onClick={() => handleNavigation(item.path)}
+              >
+                <ListItemIcon className={classes.icon}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{
+                    fontSize: '0.875rem',
+                    fontWeight: isActive(item.path) ? 500 : 400,
+                  }}
+                />
+              </ListItemButton>
+            ))}
+          </List>
+        </Collapse>
 
-        <Tooltip title={!open ? 'Settings' : ''} placement="right">
-          <ListItemButton
-            className={classes.listItem}
-            onClick={() => setSettingsOpen(!settingsOpen)}
-          >
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <SettingsIcon />
-            </ListItemIcon>
-            {open && (
-              <>
-                <ListItemText primary={t('settingsTitle') || 'Settings'} />
-                {settingsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-              </>
-            )}
-          </ListItemButton>
-        </Tooltip>
+        <ListItemButton
+          className={classes.listItem}
+          onClick={() => setSettingsOpen(!settingsOpen)}
+        >
+          <ListItemIcon className={classes.icon}>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('settingsTitle') || 'Settings'}
+            primaryTypographyProps={{ fontSize: '0.9375rem' }}
+          />
+          {settingsOpen ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+        </ListItemButton>
 
-        {open && (
-          <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {settingsItems.map((item) => (
-                <ListItemButton
-                  key={item.id}
-                  className={`${classes.listItem} ${classes.subItem} ${isActive(item.path) ? classes.activeItem : ''}`}
-                  onClick={() => handleNavigation(item.path)}
-                >
-                  <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.label} />
-                </ListItemButton>
-              ))}
-            </List>
-          </Collapse>
-        )}
+        <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {settingsItems.map((item) => (
+              <ListItemButton
+                key={item.id}
+                className={`${classes.listItem} ${classes.subItem} ${isActive(item.path) ? classes.activeItem : ''}`}
+                onClick={() => handleNavigation(item.path)}
+              >
+                <ListItemIcon className={classes.icon}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{
+                    fontSize: '0.875rem',
+                    fontWeight: isActive(item.path) ? 500 : 400,
+                  }}
+                />
+              </ListItemButton>
+            ))}
+          </List>
+        </Collapse>
       </List>
 
-      <Divider />
+      <Divider className={classes.divider} />
 
-      <Tooltip title={!open ? t('loginLogout') || 'Logout' : ''} placement="right">
+      <List sx={{ pb: 2 }}>
         <ListItemButton
           className={classes.listItem}
           onClick={handleLogout}
-          sx={{ my: 1 }}
         >
-          <ListItemIcon sx={{ color: 'error.main', minWidth: 40 }}>
+          <ListItemIcon sx={{ color: 'error.main', minWidth: 36 }}>
             <ExitToAppIcon />
           </ListItemIcon>
-          {open && (
-            <ListItemText
-              primary={t('loginLogout') || 'Logout'}
-              sx={{ color: 'error.main' }}
-            />
-          )}
+          <ListItemText
+            primary={t('loginLogout') || 'Logout'}
+            primaryTypographyProps={{ fontSize: '0.9375rem' }}
+            sx={{ color: 'error.main' }}
+          />
         </ListItemButton>
-      </Tooltip>
+      </List>
     </Box>
   );
 
@@ -350,16 +281,9 @@ const AppSidebar = ({ open, onToggle, isMobile }) => {
       variant={isMobile ? 'temporary' : 'permanent'}
       open={isMobile ? open : true}
       onClose={onToggle}
-      className={`${classes.drawer} ${open ? classes.drawerOpen : classes.drawerClose}`}
+      className={classes.drawer}
       classes={{
         paper: classes.drawerPaper,
-      }}
-      sx={{
-        width: open ? drawerWidth : miniDrawerWidth,
-        '& .MuiDrawer-paper': {
-          width: open ? drawerWidth : miniDrawerWidth,
-          boxSizing: 'border-box',
-        },
       }}
     >
       {drawerContent}

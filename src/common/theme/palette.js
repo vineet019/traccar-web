@@ -1,49 +1,47 @@
-import { grey } from '@mui/material/colors';
-
 const validatedColor = (color) => (/^#([0-9A-Fa-f]{3}){1,2}$/.test(color) ? color : null);
 
 export default (server, darkMode) => ({
   mode: darkMode ? 'dark' : 'light',
   background: {
-    default: darkMode ? '#0a0e27' : '#f8fafc',
-    paper: darkMode ? '#1a1f3a' : '#ffffff',
+    default: darkMode ? '#000000' : '#fafafa',
+    paper: darkMode ? '#1c1c1e' : '#ffffff',
   },
   primary: {
-    main: validatedColor(server?.attributes?.colorPrimary) || (darkMode ? '#60a5fa' : '#2563eb'),
-    light: darkMode ? '#93c5fd' : '#3b82f6',
-    dark: darkMode ? '#3b82f6' : '#1e40af',
-    contrastText: '#ffffff',
+    main: validatedColor(server?.attributes?.colorPrimary) || (darkMode ? '#ffffff' : '#000000'),
+    light: darkMode ? '#f5f5f5' : '#333333',
+    dark: darkMode ? '#e0e0e0' : '#000000',
+    contrastText: darkMode ? '#000000' : '#ffffff',
   },
   secondary: {
-    main: validatedColor(server?.attributes?.colorSecondary) || (darkMode ? '#34d399' : '#059669'),
-    light: darkMode ? '#6ee7b7' : '#10b981',
-    dark: darkMode ? '#10b981' : '#047857',
+    main: validatedColor(server?.attributes?.colorSecondary) || '#007aff',
+    light: '#5ac8fa',
+    dark: '#0051d5',
     contrastText: '#ffffff',
   },
   neutral: {
-    main: grey[500],
+    main: darkMode ? '#8e8e93' : '#8e8e93',
   },
   geometry: {
-    main: '#3bb2d0',
+    main: '#007aff',
   },
   alwaysDark: {
-    main: grey[900],
+    main: '#000000',
   },
   success: {
-    main: darkMode ? '#34d399' : '#059669',
-    light: darkMode ? '#6ee7b7' : '#10b981',
+    main: '#34c759',
+    light: '#63d77e',
   },
   error: {
-    main: darkMode ? '#f87171' : '#dc2626',
-    light: darkMode ? '#fca5a5' : '#ef4444',
+    main: '#ff3b30',
+    light: '#ff6259',
   },
   warning: {
-    main: darkMode ? '#fbbf24' : '#d97706',
-    light: darkMode ? '#fcd34d' : '#f59e0b',
+    main: '#ff9500',
+    light: '#ffaa33',
   },
   text: {
-    primary: darkMode ? '#f1f5f9' : '#1e293b',
-    secondary: darkMode ? '#94a3b8' : '#475569',
+    primary: darkMode ? '#ffffff' : '#000000',
+    secondary: darkMode ? '#98989d' : '#6e6e73',
   },
-  divider: darkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
+  divider: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
 });

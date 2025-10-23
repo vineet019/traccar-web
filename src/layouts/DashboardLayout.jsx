@@ -13,7 +13,8 @@ const useStyles = makeStyles()((theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    background: theme.palette.background.paper,
+    background: alpha(theme.palette.background.paper, 0.8),
+    backdropFilter: 'blur(20px)',
     borderBottom: `1px solid ${theme.palette.divider}`,
     boxShadow: 'none',
   },
@@ -22,16 +23,6 @@ const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  contentShift: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
   },
   main: {
     flex: 1,
@@ -45,7 +36,7 @@ const DashboardLayout = () => {
   const { classes } = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleSidebarToggle = () => {
     setSidebarOpen(!sidebarOpen);
@@ -59,9 +50,9 @@ const DashboardLayout = () => {
         isMobile={isMobile}
       />
       <Box
-        className={`${classes.content} ${sidebarOpen && !isMobile ? classes.contentShift : ''}`}
+        className={classes.content}
         sx={{
-          marginLeft: !isMobile ? (sidebarOpen ? '280px' : '80px') : 0,
+          marginLeft: !isMobile ? '240px' : 0,
         }}
       >
         {isMobile && (
