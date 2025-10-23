@@ -8,8 +8,16 @@ export default defineConfig(() => ({
   server: {
     port: 3000,
     proxy: {
-      '/api/socket': 'ws://localhost:8082',
-      '/api': 'http://localhost:8082',
+      '/api/socket': {
+        target: 'wss://nzbctwrflcwgobpvwrmh.supabase.co/functions/v1/api',
+        ws: true,
+        changeOrigin: true,
+      },
+      '/api': {
+        target: 'https://nzbctwrflcwgobpvwrmh.supabase.co/functions/v1/api',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
   },
   build: {
