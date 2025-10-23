@@ -18,7 +18,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-const DeviceList = ({ devices }) => {
+const DeviceList = ({ devices = [] }) => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
 
@@ -35,6 +35,14 @@ const DeviceList = ({ devices }) => {
     const response = await fetchOrThrow('/api/devices');
     dispatch(devicesActions.refresh(await response.json()));
   }, []);
+
+  if (!devices || devices.length === 0) {
+    return (
+      <div style={{ padding: '24px', textAlign: 'center', color: '#6e6e73' }}>
+        No devices available
+      </div>
+    );
+  }
 
   return (
     <List
