@@ -17,14 +17,17 @@ Deno.serve(async (req: Request) => {
 
   try {
     const url = new URL(req.url);
-    const path = url.pathname.replace(/^\/api\//, "");
-    
+    let path = url.pathname;
+
+    // Remove leading slash and any path segments before the actual endpoint
+    path = path.replace(/^\//,  '');
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Handle /api/server endpoint
-    if (path === "server") {
+    // Handle /server endpoint
+    if (path === "server" || path.endsWith("/server")) {
       const { data, error } = await supabase
         .from("server_config")
         .select("*")
@@ -56,8 +59,8 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Handle /api/session endpoint
-    if (path === "session") {
+    // Handle /session endpoint
+    if (path === "session" || path.endsWith("/session")) {
       if (req.method === "GET") {
         // Check for session token
         const token = url.searchParams.get("token");
@@ -130,8 +133,8 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Handle /api/devices endpoint
-    if (path === "devices") {
+    // Handle /devices endpoint
+    if (path === "devices" || path.endsWith("/devices")) {
       // Return empty array for now
       return new Response(
         JSON.stringify([]),
@@ -139,8 +142,8 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Handle /api/positions endpoint
-    if (path === "positions") {
+    // Handle /positions endpoint
+    if (path === "positions" || path.endsWith("/positions")) {
       // Return empty array for now
       return new Response(
         JSON.stringify([]),
@@ -150,7 +153,7 @@ Deno.serve(async (req: Request) => {
 
     // Default 404 response
     return new Response(
-      JSON.stringify({ error: "Not found" }),
+      JSON.stringify({ error: "Not found", path: path }),
       { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
     
