@@ -3,6 +3,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import Dashboard from './pages/Dashboard';
 import MainPage from './main/MainPage';
 import CombinedReportPage from './reports/CombinedReportPage';
 import PositionsReportPage from './reports/PositionsReportPage';
@@ -117,7 +118,8 @@ const Navigation = () => {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/change-server" element={<ChangeServerPage />} />
       <Route path="/" element={<App />}>
-        <Route index element={<MainPage />} />
+        <Route index element={<Dashboard />} />
+        <Route path="tracking" element={<MainPage />} />
 
         <Route path="position/:id" element={<PositionPage />} />
         <Route path="network/:positionId" element={<NetworkPage />} />
